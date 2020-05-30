@@ -1,21 +1,30 @@
 package com.pp.classy.controllers;
 
+import com.pp.classy.services.AttendancesService;
 import com.pp.classy.services.QRGeneratorService;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ClassController {
 
-  @Autowired
-  QRGeneratorService qrGeneratorService;
+  final QRGeneratorService qrGeneratorService;
+  final AttendancesService attendancesService;
+
+  public ClassController(
+      QRGeneratorService qrGeneratorService, AttendancesService attendancesService) {
+    this.qrGeneratorService = qrGeneratorService;
+    this.attendancesService = attendancesService;
+  }
 
   /**
    * For Teacher, Get All classes he/she created based on user id
@@ -55,15 +64,18 @@ public class ClassController {
    * For Teacher, Generate XML/JSON/CSV list of students that attended given class
    */
   @GetMapping("/{classId}/attendances")
-  public void generateClassAttendance(@PathVariable Long classId) {
+  public List<String> generateClassAttendance(@PathVariable Long classId) {
+    return attendancesService.getClassAttendances(classId);
   }
 
   /**
    * For Student, Create an attendance record into database
    */
+  @ResponseStatus(code = HttpStatus.OK)
   @PostMapping("/{classId}/attendances")
-  public String createAttendance(@PathVariable Long classId, @RequestParam String telephoneNumber) {
-    return telephoneNumber + " has attended " + classId;
+  public void createAttendance(@PathVariable Long classId, @RequestParam String telephoneNumber) {
+    System.out.println(telephoneNumber + " has attended " + classId);
+    attendancesService.createAttendance(classId, telephoneNumber);
   }
 
 }
