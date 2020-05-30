@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,7 +43,8 @@ public class ClassController {
       throws Exception {
     String currentRequestURL = request.getRequestURL().toString();
     String generatedUrl =
-        currentRequestURL.substring(0,currentRequestURL.indexOf("/",8)) + "/" + classId + "/attendances";
+        currentRequestURL.substring(0, currentRequestURL.indexOf("/", 8)) + "/" + classId
+            + "/attendances";
     System.out.println(generatedUrl);
     return qrGeneratorService.generateQRCodeImage(
         generatedUrl);
@@ -53,16 +55,15 @@ public class ClassController {
    * For Teacher, Generate XML/JSON/CSV list of students that attended given class
    */
   @GetMapping("/{classId}/attendances")
-  public String generateClassAttendance(@PathVariable Long classId) {
-    return "you are attending " + classId;
+  public void generateClassAttendance(@PathVariable Long classId) {
   }
 
   /**
    * For Student, Create an attendance record into database
    */
-  @PostMapping("/{classId}/students/{studentId}")
-  public void createAttendance(@PathVariable Long classId, @PathVariable Long studentId) {
-
+  @PostMapping("/{classId}/attendances")
+  public String createAttendance(@PathVariable Long classId, @RequestParam String telephoneNumber) {
+    return telephoneNumber + " has attended " + classId;
   }
 
 }
