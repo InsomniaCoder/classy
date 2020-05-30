@@ -65,7 +65,7 @@ public class ClassController {
    * @return
    * @throws Exception
    */
-  @GetMapping(produces = MediaType.IMAGE_PNG_VALUE, path = "/{classId}/qr")
+  @GetMapping(produces = MediaType.IMAGE_PNG_VALUE, path = "/classes/{classId}/qr")
   public BufferedImage generateQR(@PathVariable Long classId, HttpServletRequest request)
       throws Exception {
     String currentRequestURL = request.getRequestURL().toString();
@@ -85,7 +85,7 @@ public class ClassController {
    * @return
    * @throws ClassesNotFoundException
    */
-  @GetMapping("/{classId}/attendances")
+  @GetMapping("/classes/{classId}/attendances")
   public List<String> generateClassAttendance(@PathVariable Long classId)
       throws ClassesNotFoundException {
     return attendancesService.getClassAttendances(classId);
@@ -98,7 +98,7 @@ public class ClassController {
    * @param telephoneNumber
    */
   @ResponseStatus(code = HttpStatus.OK)
-  @PostMapping("/{classId}/attendances")
+  @PostMapping("/classes/{classId}/attendances")
   public void createAttendance(@PathVariable Long classId, @RequestParam String telephoneNumber) {
     System.out.println(telephoneNumber + " has attended " + classId);
     attendancesService.createAttendance(classId, telephoneNumber);
