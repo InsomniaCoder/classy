@@ -4,7 +4,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
-
+**/**/node_module**
+**/**/.DS_Store
 ### STS ###
 .apt_generated
 .classpath
