@@ -8,7 +8,6 @@ import com.pp.classy.services.ClassesService;
 import com.pp.classy.services.QRGeneratorService;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ClassController {
 
+
   final QRGeneratorService qrGeneratorService;
   final AttendancesService attendancesService;
   final ClassesService classesService;
+
 
   public ClassController(
       QRGeneratorService qrGeneratorService, AttendancesService attendancesService,
@@ -35,6 +36,7 @@ public class ClassController {
 
   /**
    * For Teacher, Get All classes he/she created based on user id
+   *
    * @param teacherId
    * @return
    * @throws UsersNotFoundException
@@ -57,29 +59,25 @@ public class ClassController {
   }
 
   /**
-   * * For Teacher, Generate a QR code for students to attend QR code is basically created by provide
-   *   a link to attendances URL
+   * * For Teacher, Generate a QR code for students to attend QR code is basically created by
+   * provide a link to attendances URL
    *
    * @param classId
-   * @param request
    * @return
    * @throws Exception
    */
   @GetMapping(produces = MediaType.IMAGE_PNG_VALUE, path = "/classes/{classId}/qr")
-  public BufferedImage generateQR(@PathVariable Long classId, HttpServletRequest request)
-      throws Exception {
-    String currentRequestURL = request.getRequestURL().toString();
-    String generatedUrl =
-        currentRequestURL.substring(0, currentRequestURL.indexOf("/", 8)) + "/" + classId
-            + "/attendances";
-    System.out.println(generatedUrl);
+  public BufferedImage generateQR(@PathVariable Long classId)
+      throws Exception, ClassesNotFoundException {
+    String checkInPageUrl = classesService.generateCheckInUrl(classId);
+    System.out.println(checkInPageUrl);
     return qrGeneratorService.generateQRCodeImage(
-        generatedUrl);
+        checkInPageUrl);
   }
 
 
   /**
-   *  * For Teacher, Generate XML/JSON/CSV list of students that attended given class
+   * * For Teacher, Generate XML/JSON/CSV list of students that attended given class
    *
    * @param classId
    * @return
@@ -92,7 +90,7 @@ public class ClassController {
   }
 
   /**
-   *  * For Student, Create an attendance record into database
+   * * For Student, Create an attendance record into database
    *
    * @param classId
    * @param telephoneNumber
