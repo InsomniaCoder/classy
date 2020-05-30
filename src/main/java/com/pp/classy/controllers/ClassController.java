@@ -1,7 +1,10 @@
 package com.pp.classy.controllers;
 
+import com.pp.classy.entities.Classes;
 import com.pp.classy.exception.ClassesNotFoundException;
+import com.pp.classy.exception.UsersNotFoundException;
 import com.pp.classy.services.AttendancesService;
+import com.pp.classy.services.ClassesService;
 import com.pp.classy.services.QRGeneratorService;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -20,33 +23,47 @@ public class ClassController {
 
   final QRGeneratorService qrGeneratorService;
   final AttendancesService attendancesService;
+  final ClassesService classesService;
 
   public ClassController(
-      QRGeneratorService qrGeneratorService, AttendancesService attendancesService) {
+      QRGeneratorService qrGeneratorService, AttendancesService attendancesService,
+      ClassesService classesService) {
     this.qrGeneratorService = qrGeneratorService;
     this.attendancesService = attendancesService;
+    this.classesService = classesService;
   }
 
   /**
    * For Teacher, Get All classes he/she created based on user id
+   * @param teacherId
+   * @return
+   * @throws UsersNotFoundException
    */
-  @GetMapping
-  public void getAllClasses() {
+  @GetMapping("/teachers/{teacherId}/classes")
+  public List<Classes> getAllClasses(@PathVariable Long teacherId) throws UsersNotFoundException {
+    return classesService.getAllClasses(teacherId);
   }
 
   /**
-   * For Teacher, Create a classroom given user id
-   */
-  @PostMapping
-  public void createClass() {
-
-  }
-
-  /**
-   * For Teacher, Generate a QR code for students to attend QR code is basically created by provide
-   * a link to attendances URL
+   * For Teacher, Create a classroom given teacher id
    *
-   * @return generated image
+   * @param teacherId
+   * @return generated class id
+   */
+  @PostMapping("/teachers/{teacherId}/classes")
+  public Long createClass(@PathVariable Long teacherId, @RequestParam String className)
+      throws UsersNotFoundException {
+    return classesService.createClass(teacherId, className);
+  }
+
+  /**
+   * * For Teacher, Generate a QR code for students to attend QR code is basically created by provide
+   *   a link to attendances URL
+   *
+   * @param classId
+   * @param request
+   * @return
+   * @throws Exception
    */
   @GetMapping(produces = MediaType.IMAGE_PNG_VALUE, path = "/{classId}/qr")
   public BufferedImage generateQR(@PathVariable Long classId, HttpServletRequest request)
@@ -62,7 +79,11 @@ public class ClassController {
 
 
   /**
-   * For Teacher, Generate XML/JSON/CSV list of students that attended given class
+   *  * For Teacher, Generate XML/JSON/CSV list of students that attended given class
+   *
+   * @param classId
+   * @return
+   * @throws ClassesNotFoundException
    */
   @GetMapping("/{classId}/attendances")
   public List<String> generateClassAttendance(@PathVariable Long classId)
@@ -71,7 +92,10 @@ public class ClassController {
   }
 
   /**
-   * For Student, Create an attendance record into database
+   *  * For Student, Create an attendance record into database
+   *
+   * @param classId
+   * @param telephoneNumber
    */
   @ResponseStatus(code = HttpStatus.OK)
   @PostMapping("/{classId}/attendances")

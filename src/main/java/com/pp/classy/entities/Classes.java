@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,8 +21,11 @@ public class Classes {
   private Long id;
   private String name;
 
-  @OneToMany(mappedBy="classes")
+  @OneToMany(mappedBy = "classes")
   private List<Attendances> attendances;
+
+  @ManyToOne
+  private User teacher;
 
   @Column(updatable = false)
   @CreationTimestamp
