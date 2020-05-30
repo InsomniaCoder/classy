@@ -7,7 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CheckinComponent implements OnInit {
 
-  constructor() { }
+  className: String;
+
+  constructor() {
+    this.className = "Math"
+  }
 
   ngOnInit(): void {
   }
