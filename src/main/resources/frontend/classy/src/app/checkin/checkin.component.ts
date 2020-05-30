@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Router, ActivatedRoute, ParamMap} from '@angular/router';
 
 @Component({
   selector: 'app-checkin',
@@ -8,12 +9,16 @@ import { Component, OnInit } from '@angular/core';
 export class CheckinComponent implements OnInit {
 
   className: String;
+  classId: Number;
 
-  constructor() {
-    this.className = "Math"
+  constructor(private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.className = params['className'];
+      this.classId = params['classId'];
+    });
   }
 
 }
