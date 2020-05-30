@@ -1,5 +1,6 @@
 package com.pp.classy.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
@@ -28,5 +29,6 @@ public class User {
   private LocalDateTime updatedAt;
 
   @OneToMany(mappedBy = "teacher")
+  @JsonManagedReference
   private List<Classes> classes;
 }
