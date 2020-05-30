@@ -1,5 +1,6 @@
 package com.pp.classy.controllers;
 
+import com.pp.classy.exception.ClassesNotFoundException;
 import com.pp.classy.services.AttendancesService;
 import com.pp.classy.services.QRGeneratorService;
 import java.awt.image.BufferedImage;
@@ -64,7 +65,8 @@ public class ClassController {
    * For Teacher, Generate XML/JSON/CSV list of students that attended given class
    */
   @GetMapping("/{classId}/attendances")
-  public List<String> generateClassAttendance(@PathVariable Long classId) {
+  public List<String> generateClassAttendance(@PathVariable Long classId)
+      throws ClassesNotFoundException {
     return attendancesService.getClassAttendances(classId);
   }
 
