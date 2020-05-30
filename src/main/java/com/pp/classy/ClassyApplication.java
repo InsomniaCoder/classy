@@ -31,7 +31,7 @@ public class ClassyApplication {
       sukanda.setName("Sukanda Pudpadee");
       User santiUser = usersRepository.save(santi);
       User sukandaUser = usersRepository.save(sukanda);
-      System.out.println(santi.toString());
+      System.out.println(santiUser.toString());
       System.out.println(sukandaUser.toString());
     };
   }
