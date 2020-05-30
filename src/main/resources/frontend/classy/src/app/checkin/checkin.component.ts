@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
+import {environment} from '../../environments/environment';
+import {HttpClient} from "@angular/common/http";
+import {catchError} from "rxjs/operators";
 
 @Component({
   selector: 'app-checkin',
@@ -11,7 +14,9 @@ export class CheckinComponent implements OnInit {
   className: String;
   classId: Number;
 
-  constructor(private route: ActivatedRoute) {
+  telephoneNumber: String;
+
+  constructor(private route: ActivatedRoute, private http: HttpClient) {
   }
 
   ngOnInit(): void {
@@ -21,4 +26,17 @@ export class CheckinComponent implements OnInit {
     });
   }
 
+  checkIn() {
+    // alert(this.telephoneNumber);
+    let checkInAPIUrl = environment.serverUrl + "/classes/" + this.classId + "/attendances?telephoneNumber=" + this.telephoneNumber;
+    console.log("calling api : "+checkInAPIUrl);
+    let objectObservable = this.http.post(checkInAPIUrl, {});
+    objectObservable.subscribe(result => {
+      alert("checked in successfully!");
+    })
+  }
+
+  onKey(value: string) {
+    this.telephoneNumber = value;
+  }
 }

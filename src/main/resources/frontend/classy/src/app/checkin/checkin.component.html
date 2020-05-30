@@ -7,25 +7,25 @@
 
 <section id="home" class="hero is-large is-centered">
   <div class="hero-body is-centered">
-    <div class="container" >
+    <div class="container">
       <div class="columns is-centered" style="margin-left: 150px;">
         <div class="column is-half">
           <h1 class="title is-title has-text-weight-bold">Welcome to class : {{className}}</h1>
 
           <p class="subtitle has-margin-top-20 is-family-primary">Checking in to class</p>
 
-          <form method="get">
             <div class="field has-addons has-margin-top-30">
               <div class="control">
-                <input class="input is-medium" type="tel" name="tel" placeholder="telephone number">
+                <input #telephoneNumber (keyup)="onKey(telephoneNumber.value)" class="input is-medium"
+                       type="tel" name="tel"
+                       placeholder="telephone number">
               </div>
               <div class="control">
-                <button type="submit" class="button is-primary is-medium">
+                <button (click)="checkIn()" class="button is-primary is-medium">
                   check in
                 </button>
               </div>
             </div>
-          </form>
         </div>
       </div>
     </div>
